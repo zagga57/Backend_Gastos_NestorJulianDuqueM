@@ -41,16 +41,6 @@ router.put("/:id", auth, async (req, res) => {
   const { title, amount, date, category } = req.body;
 
   try {
-    // const existingExpense = await Expense.findOne({
-    //  title,
-    // user: req.user.id,
-    //_id: { $ne: req.params.id },
-    //});
-    //if (existingExpense) {
-    // return res
-    // .status(400)
-    ///.json({ error: "Ya existe otra gasto con este Titulo" });
-    //}
     const expense = await Expense.findOneAndUpdate(
       { _id: req.params.id, user: req.user.id },
       { title, amount, date, category },
@@ -67,14 +57,11 @@ router.put("/:id", auth, async (req, res) => {
 //Eliminar un gasto//
 
 router.delete("/:id", auth, async (req, res) => {
-  //const { title, amount, date, category } = req.body;
-
   try {
-    const expense = await Expense.findOneAndDelete(
-      { _id: req.params.id, user: req.user.id },
-      //{ title, amount, date, category },
-      //{ new: true, runValidators: true },
-    );
+    const expense = await Expense.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user.id,
+    });
     if (!expense) return res.status(404).json({ error: "Gasto no encontrado" });
     res.json(expense);
   } catch (error) {
