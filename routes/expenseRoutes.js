@@ -65,4 +65,22 @@ router.put("/:id", auth, async (req, res) => {
 });
 
 //Eliminar un gasto//
+
+router.delete("/:id", auth, async (req, res) => {
+  //const { title, amount, date, category } = req.body;
+
+  try {
+    const expense = await Expense.findOneAndDelete(
+      { _id: req.params.id, user: req.user.id },
+      //{ title, amount, date, category },
+      //{ new: true, runValidators: true },
+    );
+    if (!expense) return res.status(404).json({ error: "Gasto no encontrado" });
+    res.json(expense);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al Eliminar el gasto" });
+  }
+});
+
 module.exports = router;
